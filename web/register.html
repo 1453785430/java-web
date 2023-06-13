@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        form{
+            width: 50%;
+            margin: 10% auto;
+        }
+        div{
+            margin-bottom: 10px;
+        }
+        input{
+            border: 1px solid #333;
+            border-radius: 5px;
+            outline: none;
+            width: 250px;
+            height: 35px;
+        }
+        button{
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: #ffffff;
+            border-radius: 5px;
+            border: none;
+        }
+        button:nth-child(1){
+            background-color: green;
+        }
+        button:nth-child(2){
+            background-color: tomato;
+        }
+        h1{
+            margin-left: 120px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+  <form action="register.do" method="post">
+      <h1 style="color: blueviolet">用户注册</h1>
+      <div>
+          <label for="userName">&nbsp用&nbsp户&nbsp名:&nbsp</label>
+          <input id="userName" type="text" name="userName" placeholder="请输入用户名">
+      </div>
+      <div>
+          <label for="password">&nbsp密&nbsp&nbsp&nbsp&nbsp&nbsp码:&nbsp&nbsp</label>
+          <input id="password" type="password" name="password" placeholder="请输入密码">
+      </div>
+      <div>
+          <label for="name">&nbsp昵&nbsp&nbsp&nbsp&nbsp&nbsp称:&nbsp&nbsp</label>
+          <input id="name" type="text" name="name" placeholder="请输入昵称">
+      </div>
+      <div>
+          <label for="tel">&nbsp电&nbsp&nbsp&nbsp&nbsp&nbsp话:&nbsp&nbsp</label>
+          <input id="tel" type="text" name="tel" placeholder="请输入电话">
+      </div>
+      <div>
+          <label for="address">&nbsp地&nbsp&nbsp&nbsp&nbsp&nbsp址:&nbsp&nbsp</label>
+          <input id="address" type="text" name="address" placeholder="请输入地址">
+      </div>
+      <div>
+          <label for="idcard">身份证号:&nbsp</label>
+          <input id="idcard" type="text" name="idcard" placeholder="请输入身份证号">
+      </div>
+      <div>
+          <button type="submit">立即注册</button>
+          <button type="reset">取消</button>
+      </div>
+  </form>
+</body>
+</html>

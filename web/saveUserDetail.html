@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>填写用户详细信息</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    #tip{
+        background-color: rgba(0,0,0,0.3);
+        color: #fff;
+        position: fixed;
+        top: 0;
+    }
+    input[name = 'sex']{
+
+    }
+</style>
+<body>
+<div class="box">
+    <div>
+        <label>昵称</label>
+        <input type="text" id="nickName" placeholder="请输入昵称">
+    </div>
+
+    <div>
+        <label>姓名</label>
+        <input type="text" id="name" placeholder="请输入姓名">
+    </div>
+
+    <div>
+        <label>性别</label>
+        <label><input type="radio" name="sex" value="1" checked>男</label>
+        <label><input type="radio" name="sex" value="0">女</label>
+    </div>
+
+    <div>
+        <label>电话</label>
+        <input type="text" id="tel" placeholder="请输入电话">
+    </div>
+
+    <div>
+        <label>地址</label>
+        <select id="province" onchange="switchProvince()">
+            <option value="0">请选择</option>
+        </select>
+
+        <select id="city" onchange="switchCity()">
+            <option value="0">请选择</option>
+        </select>
+
+        <select id="district" >
+            <option value="0">请选择</option>
+        </select>
+    </div>
+
+    <div>
+        <label>详细地址</label>
+        <input type="text" id="address" placeholder="请输入详细地址">
+    </div>
+
+    <div>
+        <button onclick="subData()">提交</button>
+    </div>
+</div>
+
+<div id="tip"></div>
+</body>
+<script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    //页面加载完毕之后,就要立即触发的函数
+    $(function (){
+        $.ajax({
+            url:"getSysRegionsByPid.do",
+            type:"get",
+            dataType:"json",
+            data:{
+                pid:-1
+            },
+            success(res) {
+                if (res.code == 200){
+                    let province = document.getElementById("province");
+                    let list = res.data;
+                    for (let address of list){
+                        let option = document.createElement("option")
+                        option.value=address.regionId;
+                        option.innerText=address.regionName;
+                        province.appendChild(option);
+                    }
+                }else {
+                    alert(res.msg)
+                }
+            }
+        })
+    })
+
+    /**
+     * 省下拉框改变的时候触发
+     * 当省改变的时候,市要根据所选的省,去动态渲染,(先清空,再渲染)
+     * 县区的下拉列表要清空
+     */
+    function switchProvince(){
+        //省下拉框对象
+        let province = document.getElementById("province");
+        let pid = province.value;
+        //市下拉框对象
+        let city = document.getElementById("city");
+        city.innerHTML="<option value=\"0\">请选择</option>";
+        $.ajax({
+            url:"getSysRegionsByPid.do",
+            type:"get",
+            dataType:"json",
+            data:{
+                pid:pid
+            },
+            success(res) {
+                if (res.code == 200){
+                    let list = res.data;
+                    for (let address of list){
+                        let option = document.createElement("option")
+                        option.value=address.regionId;
+                        option.innerText=address.regionName;
+                        city.appendChild(option);
+                    }
+                }else {
+                    alert(res.msg)
+                }
+            }
+        })
+        //区/县下拉框
+        let district = document.getElementById("district");
+        district.innerHTML="<option value=\"0\">请选择</option>";
+    }
+    function switchCity(){
+        //获取当前市下拉框里选中的值
+        let pid = document.getElementById("city").value;
+        let district = document.getElementById("district");
+        district.innerHTML="<option value=\"0\">请选择</option>";
+        $.ajax({
+            url:"getSysRegionsByPid.do",
+            type:"get",
+            dataType:"json",
+            data:{
+                pid:pid
+            }, success(res) {
+                if (res.code == 200){
+                    let list = res.data;
+                    for (let address of list){
+                        //要进行渲染数据了,创建option标签,把创建好的option标签,放到曲线下拉框中
+                        let option = document.createElement("option")
+                        option.value=address.regionId;
+                        option.innerText=address.regionName;
+                        district.appendChild(option);
+                    }
+                }else {
+                    alert(res.msg)
+                }
+            }
+        })
+    }
+
+    function subData(){
+        if (checkAll()){
+            $.ajax({
+                url: "register1.do",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    nickName: $("#nickName").val(),
+                    name: $("#name").val(),
+                    tel: $("#tel").val(),
+                    // let sex = $("#sex").val();
+                    sex: $("input[name='sex']:checked").val(),
+                    province: $("#province option:selected").html(),
+                    city: $("#city option:selected").html(),
+                    district: $("#district option:selected").html(),
+                    address: $("#address").val()
+                }, success(res) {
+                    console.log(JSON.stringify(res));
+                    if (res.code == 200) {
+                        console.log(JSON.stringify(res))
+                        //跳转到用户详情列表页
+                        // location.href="user_detail_list.html"
+                        location.href = "userDetailList.html"
+                    } else {
+                        alert(res.msg)
+                    }
+                },error:function (data){
+                    console.log(data)
+                }
+            })
+        }
+    }
+
+    function checkAll(){
+        let nickName = $("#nickName").val();
+        if (nickName == null || nickName == ""){
+            alert("昵称不能为空")
+            return false;
+        }
+        let tel = $("#tel").val();
+        if (tel == null || tel == ""){
+            alert("电话不能为空")
+        }else {
+
+        }
+        return true;
+    }
+</script>
+
+</html>

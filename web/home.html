@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>登陆成功</h1>
+<div id="user_div"></div>
+</body>
+<script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+
+        //需要发送一个异步请求,从后端拿取所有用户的集合
+        $.ajax({
+            url: "userAll.do",
+            type: "get",
+            dataType: "json",
+            success(res) {
+                if (res.code == 200) {
+                    //数据请求成功
+                    let userBox = document.getElementById("user_div");
+                    let userList = res.data;
+                    for (let userInfo of userList) {
+                        let str = userInfo.id + "\t"
+                            + userInfo.name + "\t"
+                            + userInfo.userName + "\t"
+                            + userInfo.password + "\t"
+                            + userInfo.tel + "\t"
+                            + userInfo.address + "\t"
+                            + userInfo.idcard;
+                        let p = document.createElement("p");
+                        p.innerHTML = str;
+                        userBox.appendChild(p);
+                    }
+                } else {
+                    alert(res.msg)
+                }
+            },
+            error() {
+
+            }
+        })
+    }
+</script>
+</html>
